@@ -17,6 +17,7 @@
   --pink:#FADADD;
   --mint:#DFF5EA;
   --text:#555;
+  --red-heart: #FF69B4; 
 }
 
 body{
@@ -80,30 +81,48 @@ h1{
   opacity:.6;
 }
 
+/* La descripción se muestra al pasar el ratón o tocar (hover) */
 .task label:hover + .desc{
   display:block;
 }
 
+/* ESTILOS DE BARRA DE PROGRESO CON CORAZÓN */
 .progress-bar{
   background:#eee;
   border-radius:20px;
   overflow:hidden;
-  height:26px;
+  height:30px; 
   margin-top:10px;
+  display:flex;
+  align-items:center;
+  position:relative; /* Necesario para posicionar el corazón */
 }
 
 .progress-fill{
   height:100%;
   width:0%;
-  background:repeating-linear-gradient(
-    45deg,
-    var(--lav),
-    var(--lav) 12px,
-    #ebeafd 12px,
-    #ebeafd 24px
-  );
+  background:var(--lav);
   transition:width .4s ease;
+  position:absolute;
+  top:0;
+  left:0;
 }
+
+.heart-emoji{
+  position:absolute;
+  right:10px;
+  font-size:20px;
+  opacity:0;
+  transition:opacity .3s ease, transform .3s ease;
+  z-index: 10; /* Para que el corazón esté sobre la barra */
+}
+
+/* Animación del corazón */
+.progress-bar:hover .heart-emoji{
+  opacity:1;
+  transform:scale(1.2);
+}
+
 
 .reward{
   text-align:center;
@@ -131,6 +150,7 @@ h1{
   padding:10px;
   font-size:20px;
   box-shadow:0 4px 10px rgba(0,0,0,.2);
+  z-index: 100;
 }
 </style>
 </head>
@@ -143,7 +163,6 @@ h1{
 
 <div class="container">
 
-<!-- RUTINA DIARIA -->
 <div class="section">
 <h2>☀️ Rutina Diaria</h2>
 
@@ -194,10 +213,9 @@ h1{
 
 <div class="progress-bar">
 <div class="progress-fill" id="progress"></div>
-</div>
+<span class="heart-emoji">💖</span> </div>
 </div>
 
-<!-- RUTINA NOCTURNA -->
 <div class="section">
 <h2>🌙 Rutina Nocturna</h2>
 
@@ -240,6 +258,7 @@ const KEY='tasks',DATE='date';
 function today(){return new Date().toISOString().split('T')[0];}
 
 function load(){
+ // Revisa si la fecha es nueva y resetea
  if(localStorage.getItem(DATE)!==today()){
    localStorage.setItem(KEY,JSON.stringify([]));
    localStorage.setItem(DATE,today());
@@ -281,6 +300,7 @@ reset.onclick=()=>{
 checks.forEach(c=>c.onchange=update);
 load();
 
+// Registro del Service Worker para PWA (Funciona offline)
 if('serviceWorker' in navigator){
  navigator.serviceWorker.register('service-worker.js');
 }
