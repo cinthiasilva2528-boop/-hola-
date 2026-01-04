@@ -3,147 +3,211 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control de Hábitos</title>
+<title>Mi Jueguito de Hábitos</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#F9F9F9">
-
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-
+<meta name="theme-color" content="#FFCCE5"> <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --white:#F9F9F9;
-  --light-gray:#E8E8E8;
-  --medium-gray:#A0A0A0;
-  --dark-gray:#333333;
-  --accent:#333333; 
+  --light-pink:#FFCCE5;
+  --medium-pink:#FFADDC;
+  --dark-pink:#FF8BC6;
+  --text-dark:#604B5F;
+  --text-light:#FFFFFF;
+  --shadow-pink:rgba(255,173,220,0.3);
 }
 
 body{
   margin:0;
-  font-family:'Roboto',sans-serif;
-  background:var(--light-gray);
-  color:var(--dark-gray);
+  font-family:'Comfortaa',cursive;
+  background:linear-gradient(135deg,var(--light-pink) 0%,var(--medium-pink) 100%);
+  color:var(--text-dark);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
 }
 
 h1{
   text-align:center;
-  margin:30px 0 20px;
-  font-weight:500;
-  font-size:1.8rem;
+  margin:25px 0 20px;
+  font-weight:600;
+  font-size:2rem;
+  color:var(--text-dark);
+  text-shadow:1px 1px 2px var(--shadow-pink);
 }
 
 .container{
-  max-width:600px;
+  max-width:700px;
   margin:auto;
-  padding:0 15px;
+  padding:15px;
+  flex-grow:1;
 }
 
 .section{
-  background:var(--white);
-  border-radius:12px;
+  background:var(--text-light);
+  border-radius:25px;
   padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 4px 8px rgba(0,0,0,.05);
+  margin-bottom:25px;
+  box-shadow:0 8px 20px var(--shadow-pink);
+  animation:popIn .8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
+@keyframes popIn{
+  0%{opacity:0;transform:scale(0.8) translateY(20px);}
+  100%{opacity:1;transform:scale(1) translateY(0);}
 }
 
 h2{
-  font-size:1.4rem;
-  border-bottom:1px solid var(--light-gray);
+  font-size:1.6rem;
+  color:var(--dark-pink);
+  border-bottom:2px dashed var(--light-pink);
   padding-bottom:10px;
   margin-top:0;
+  text-align:center;
 }
 
 .task{
   margin-bottom:15px;
-  border-bottom:1px dashed var(--light-gray);
   padding-bottom:10px;
+  border-bottom:1px solid var(--light-pink);
+}
+
+.task:last-of-type{
+  border-bottom:none;
 }
 
 .task label{
   display:flex;
   align-items:center;
   cursor:pointer;
-  font-size:1rem;
+  font-size:1.1rem;
+  transition:color .2s;
 }
 
 .task input{
   appearance:none;
-  width:18px;
-  height:18px;
-  border:2px solid var(--medium-gray);
-  border-radius:4px;
+  width:24px;
+  height:24px;
+  border:2px solid var(--medium-pink);
+  border-radius:8px;
   margin-right:15px;
   cursor:pointer;
-  transition:all .2s;
+  transition:all .3s ease;
   flex-shrink: 0;
-}
-
-.task input:checked{
-  background-color:var(--accent);
-  border-color:var(--accent);
   position:relative;
 }
 
+.task input:checked{
+  background-color:var(--dark-pink);
+  border-color:var(--dark-pink);
+}
+
 .task input:checked::after{
-  content:'\2713'; /* Checkmark simple */
-  color:var(--white);
-  font-size:12px;
+  content:'💖'; /* Corazón en vez de check */
+  font-size:16px;
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
+  line-height:1;
+  animation:heartBeat .4s forwards;
+}
+
+@keyframes heartBeat{
+  0%{transform:translate(-50%,-50%) scale(0.5);opacity:0;}
+  70%{transform:translate(-50%,-50%) scale(1.2);opacity:1;}
+  100%{transform:translate(-50%,-50%) scale(1);opacity:1;}
 }
 
 .task input:checked + span{
-  text-decoration:none; /* Minimalismo: eliminamos el tachado */
-  opacity:.6;
-  font-style:italic;
+  text-decoration:line-through;
+  opacity:.7;
+  color:var(--medium-gray); /* Para que el texto se vea más suave */
 }
 
 .desc{
-  margin-top:5px;
-  margin-left:32px;
-  font-size:.85rem;
-  color:var(--medium-gray);
-  padding:0 5px;
+  margin-top:8px;
+  margin-left:39px; /* Alineado con el texto de la tarea */
+  font-size:.9rem;
+  color:var(--text-dark);
+  background:var(--light-pink);
+  padding:8px 12px;
+  border-radius:15px;
   display:none;
+  animation:fadeIn .3s ease;
 }
 
 .task label:hover + .desc{
   display:block;
 }
 
-/* ESTILOS MINIMALISTAS DE BARRA DE PROGRESO */
+/* ESTILOS DE BARRA DE PROGRESO CON CONEJITO ANIMADO */
 .progress-bar{
-  background:var(--light-gray);
-  border-radius:10px;
+  background:var(--light-pink);
+  border-radius:20px;
   overflow:hidden;
-  height:16px; 
-  margin-top:15px;
+  height:40px; 
+  margin-top:20px;
+  display:flex;
+  align-items:center;
+  position:relative;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .progress-fill{
   height:100%;
   width:0%;
-  background:var(--accent);
-  transition:width .4s ease;
+  background:var(--dark-pink);
+  border-radius:20px;
+  transition:width .6s cubic-bezier(0.25, 1, 0.5, 1);
+  position:absolute;
+  top:0;
+  left:0;
 }
+
+.bunny-emoji{
+  position:absolute;
+  left:0%; /* Se mueve con el progreso */
+  transform:translateX(-50%); /* Centra el conejito en el porcentaje */
+  font-size:28px; /* Tamaño del conejito */
+  z-index:10;
+  transition:left .6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.bunny-emoji.happy {
+    content: '🐰'; /* Conejito feliz */
+}
+.bunny-emoji.super-happy {
+    content: '🐇'; /* Conejito súper feliz, más grande */
+}
+
 
 .reward{
   text-align:center;
-  padding:15px;
-  border-radius:8px;
-  font-size:1rem;
-  border:2px solid var(--medium-gray);
+  padding:25px;
+  border-radius:20px;
+  font-size:1.2rem;
+  color:var(--text-dark);
+  border:3px dashed var(--medium-pink);
+  margin-top:30px;
 }
 
-.locked{opacity:.4; background:var(--light-gray);}
+.locked{
+    opacity:.5;
+    background:var(--light-pink);
+    filter:grayscale(100%);
+}
 .unlocked{
-    background:var(--accent);
-    color:var(--white);
-    border-color:var(--accent);
-    font-weight: 500;
+    background:var(--dark-pink);
+    color:var(--text-light);
+    border-color:var(--dark-pink);
+    font-weight:600;
+    box-shadow:0 0 15px var(--shadow-pink);
+    animation:pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  100%{transform:scale(1.03);}
 }
 
 .reset-btn{
@@ -152,12 +216,17 @@ h2{
   right:20px;
   border:none;
   border-radius:50%;
-  background:var(--white);
-  padding:10px;
-  font-size:18px;
-  box-shadow:0 2px 5px rgba(0,0,0,.15);
+  background:var(--text-light);
+  padding:12px;
+  font-size:22px;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);
   cursor:pointer;
-  transition:background .2s;
+  transition:transform .2s, background .2s;
+  z-index:100;
+}
+
+.reset-btn:active{
+  transform:scale(0.95);
 }
 </style>
 </head>
@@ -166,12 +235,12 @@ h2{
 
 <button class="reset-btn" id="reset" title="Reiniciar Día">🔄</button>
 
-<h1>Control de Hábitos</h1>
+<h1>🌸 Mi Jueguito de Hábitos 🌸</h1>
 
 <div class="container">
 
 <div class="section">
-<h2>Rutina Diaria</h2>
+<h2>☀️ Rutina Diaria</h2>
 
 <div class="task">
 <label><input type="checkbox" class="check"> <span>Rutina Matutina + Postura</span></label>
@@ -220,11 +289,12 @@ h2{
 
 <div class="progress-bar">
 <div class="progress-fill" id="progress"></div>
+<span class="bunny-emoji" id="bunny">🐰</span> 
 </div>
 </div>
 
 <div class="section">
-<h2>Rutina Nocturna</h2>
+<h2>🌙 Rutina Nocturna</h2>
 
 <div class="task">
 <label><input type="checkbox" class="check"> <span>Once Familiar</span></label>
@@ -259,13 +329,13 @@ const checks=document.querySelectorAll('.check');
 const progress=document.getElementById('progress');
 const reward=document.getElementById('reward');
 const reset=document.getElementById('reset');
+const bunny=document.getElementById('bunny'); // Referencia al conejito
 
 const KEY='tasks',DATE='date';
 
 function today(){return new Date().toISOString().split('T')[0];}
 
 function load(){
- // Revisa si la fecha es nueva y resetea
  if(localStorage.getItem(DATE)!==today()){
    localStorage.setItem(KEY,JSON.stringify([]));
    localStorage.setItem(DATE,today());
@@ -285,10 +355,23 @@ function update(){
  const percent=Math.round(done/total*100);
  progress.style.width=percent+'%';
 
+ // Mover el conejito
+ bunny.style.left = `calc(${percent}% - 15px)`; // Ajuste para centrarlo
+
+ // Cambiar la expresión del conejito
+ if (percent < 50) {
+    bunny.textContent = '🐰'; // Normal
+ } else if (percent < 80) {
+    bunny.textContent = '😊'; // Sonriendo
+ } else {
+    bunny.textContent = '💖'; // Feliz con corazón
+ }
+
+
  if(percent>=80){
    reward.classList.remove('locked');
    reward.classList.add('unlocked');
-   reward.innerHTML='🎉 DORAMAS DESBLOQUEADOS';
+   reward.innerHTML='🎉 DORAMAS DESBLOQUEADOS 💖';
  }else{
    reward.classList.add('locked');
    reward.classList.remove('unlocked');
@@ -307,7 +390,6 @@ reset.onclick=()=>{
 checks.forEach(c=>c.onchange=update);
 load();
 
-// Registro del Service Worker para PWA (Funciona offline)
 if('serviceWorker' in navigator){
  navigator.serviceWorker.register('service-worker.js');
 }
