@@ -3,168 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mi Jueguito de Hábitos</title>
+<title>Control de Hábitos</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#C4C3E0">
+<meta name="theme-color" content="#F9F9F9">
 
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --beige:#F5F5DC;
-  --lav:#C4C3E0;
-  --pink:#FADADD;
-  --mint:#DFF5EA;
-  --text:#555;
-  --red-heart: #FF69B4; 
+  --white:#F9F9F9;
+  --light-gray:#E8E8E8;
+  --medium-gray:#A0A0A0;
+  --dark-gray:#333333;
+  --accent:#333333; 
 }
 
 body{
   margin:0;
-  font-family:'Quicksand',sans-serif;
-  background:linear-gradient(180deg,var(--beige),var(--mint));
-  color:var(--text);
+  font-family:'Roboto',sans-serif;
+  background:var(--light-gray);
+  color:var(--dark-gray);
 }
 
 h1{
   text-align:center;
-  margin:20px 0;
+  margin:30px 0 20px;
+  font-weight:500;
+  font-size:1.8rem;
 }
 
 .container{
-  max-width:900px;
+  max-width:600px;
   margin:auto;
-  padding:15px;
+  padding:0 15px;
 }
 
 .section{
-  background:white;
-  border-radius:22px;
-  padding:15px;
+  background:var(--white);
+  border-radius:12px;
+  padding:20px;
   margin-bottom:20px;
-  box-shadow:0 6px 14px rgba(0,0,0,.08);
-  animation:fadeIn .6s ease;
+  box-shadow:0 4px 8px rgba(0,0,0,.05);
 }
 
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:translateY(0)}
+h2{
+  font-size:1.4rem;
+  border-bottom:1px solid var(--light-gray);
+  padding-bottom:10px;
+  margin-top:0;
 }
 
 .task{
-  margin-bottom:10px;
+  margin-bottom:15px;
+  border-bottom:1px dashed var(--light-gray);
+  padding-bottom:10px;
 }
 
 .task label{
   display:flex;
   align-items:center;
   cursor:pointer;
+  font-size:1rem;
 }
 
 .task input{
-  margin-right:10px;
-  transform:scale(1.4);
+  appearance:none;
+  width:18px;
+  height:18px;
+  border:2px solid var(--medium-gray);
+  border-radius:4px;
+  margin-right:15px;
+  cursor:pointer;
+  transition:all .2s;
+  flex-shrink: 0;
 }
 
-.desc{
-  margin-left:32px;
-  font-size:.85rem;
-  background:var(--pink);
-  padding:6px 10px;
-  border-radius:12px;
-  display:none;
+.task input:checked{
+  background-color:var(--accent);
+  border-color:var(--accent);
+  position:relative;
+}
+
+.task input:checked::after{
+  content:'\2713'; /* Checkmark simple */
+  color:var(--white);
+  font-size:12px;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
 }
 
 .task input:checked + span{
-  text-decoration:line-through;
+  text-decoration:none; /* Minimalismo: eliminamos el tachado */
   opacity:.6;
+  font-style:italic;
 }
 
-/* La descripción se muestra al pasar el ratón o tocar (hover) */
+.desc{
+  margin-top:5px;
+  margin-left:32px;
+  font-size:.85rem;
+  color:var(--medium-gray);
+  padding:0 5px;
+  display:none;
+}
+
 .task label:hover + .desc{
   display:block;
 }
 
-/* ESTILOS DE BARRA DE PROGRESO CON CORAZÓN */
+/* ESTILOS MINIMALISTAS DE BARRA DE PROGRESO */
 .progress-bar{
-  background:#eee;
-  border-radius:20px;
+  background:var(--light-gray);
+  border-radius:10px;
   overflow:hidden;
-  height:30px; 
-  margin-top:10px;
-  display:flex;
-  align-items:center;
-  position:relative; /* Necesario para posicionar el corazón */
+  height:16px; 
+  margin-top:15px;
 }
 
 .progress-fill{
   height:100%;
   width:0%;
-  background:var(--lav);
+  background:var(--accent);
   transition:width .4s ease;
-  position:absolute;
-  top:0;
-  left:0;
 }
-
-.heart-emoji{
-  position:absolute;
-  right:10px;
-  font-size:20px;
-  opacity:0;
-  transition:opacity .3s ease, transform .3s ease;
-  z-index: 10; /* Para que el corazón esté sobre la barra */
-}
-
-/* Animación del corazón */
-.progress-bar:hover .heart-emoji{
-  opacity:1;
-  transform:scale(1.2);
-}
-
 
 .reward{
   text-align:center;
-  padding:20px;
-  border-radius:18px;
-  font-size:1.1rem;
+  padding:15px;
+  border-radius:8px;
+  font-size:1rem;
+  border:2px solid var(--medium-gray);
 }
 
-.locked{opacity:.4}
-.unlocked{background:var(--pink);animation:pulse 1.2s infinite}
-
-@keyframes pulse{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.03)}
-  100%{transform:scale(1)}
+.locked{opacity:.4; background:var(--light-gray);}
+.unlocked{
+    background:var(--accent);
+    color:var(--white);
+    border-color:var(--accent);
+    font-weight: 500;
 }
 
 .reset-btn{
   position:fixed;
-  top:10px;
-  right:10px;
+  top:20px;
+  right:20px;
   border:none;
   border-radius:50%;
-  background:white;
+  background:var(--white);
   padding:10px;
-  font-size:20px;
-  box-shadow:0 4px 10px rgba(0,0,0,.2);
-  z-index: 100;
+  font-size:18px;
+  box-shadow:0 2px 5px rgba(0,0,0,.15);
+  cursor:pointer;
+  transition:background .2s;
 }
 </style>
 </head>
 
 <body>
 
-<button class="reset-btn" id="reset">💔</button>
+<button class="reset-btn" id="reset" title="Reiniciar Día">🔄</button>
 
-<h1>🌸 Mi Jueguito de Hábitos 🌸</h1>
+<h1>Control de Hábitos</h1>
 
 <div class="container">
 
 <div class="section">
-<h2>☀️ Rutina Diaria</h2>
+<h2>Rutina Diaria</h2>
 
 <div class="task">
 <label><input type="checkbox" class="check"> <span>Rutina Matutina + Postura</span></label>
@@ -213,11 +220,11 @@ h1{
 
 <div class="progress-bar">
 <div class="progress-fill" id="progress"></div>
-<span class="heart-emoji">💖</span> </div>
+</div>
 </div>
 
 <div class="section">
-<h2>🌙 Rutina Nocturna</h2>
+<h2>Rutina Nocturna</h2>
 
 <div class="task">
 <label><input type="checkbox" class="check"> <span>Once Familiar</span></label>
@@ -281,7 +288,7 @@ function update(){
  if(percent>=80){
    reward.classList.remove('locked');
    reward.classList.add('unlocked');
-   reward.innerHTML='🎉 DORAMAS DESBLOQUEADOS 💖';
+   reward.innerHTML='🎉 DORAMAS DESBLOQUEADOS';
  }else{
    reward.classList.add('locked');
    reward.classList.remove('unlocked');
