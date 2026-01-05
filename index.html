@@ -5,13 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Jueguito de Hábitos</title>
 
+<!-- PWA básico -->
+<link rel="manifest" href="data:application/json,{
+  &quot;name&quot;:&quot;Mi Jueguito de Hábitos&quot;,
+  &quot;short_name&quot;:&quot;Hábitos&quot;,
+  &quot;display&quot;:&quot;standalone&quot;,
+  &quot;background_color&quot;:&quot;#f9c5d1&quot;,
+  &quot;theme_color&quot;:&quot;#f9c5d1&quot;
+}">
+
 <style>
 :root{
   --rosa:#f9c5d1;
   --rosa2:#fde7ee;
-  --card:#fff5f8;
+  --card:#fff6f9;
   --texto:#6a4a57;
+  --barra:#f3a6bb;
 }
+
+*{box-sizing:border-box}
 
 body{
   margin:0;
@@ -21,56 +33,55 @@ body{
 }
 
 .app{
-  max-width:430px;
+  max-width:440px;
   margin:auto;
-  padding:16px;
+  padding:16px 14px 120px;
 }
 
 header{
   text-align:center;
-  font-size:1.6em;
+  font-size:1.7em;
   font-weight:700;
-  margin-bottom:10px;
+  margin-bottom:14px;
 }
 
 .card{
   background:var(--card);
-  border-radius:20px;
+  border-radius:22px;
   padding:16px;
   margin-bottom:14px;
   box-shadow:0 6px 14px rgba(0,0,0,.06);
 }
 
 h2{
-  margin:0 0 10px;
+  margin:0 0 12px;
   font-size:1.1em;
 }
 
 .task{
   display:flex;
-  align-items:flex-start;
   gap:10px;
-  margin-bottom:8px;
+  margin-bottom:10px;
 }
 
 .task input{
-  transform:scale(1.2);
+  transform:scale(1.3);
+  margin-top:4px;
 }
 
 .task span{
-  font-size:.9em;
+  font-size:.92em;
 }
 
 .task small{
   display:block;
   font-size:.75em;
-  opacity:.8;
+  opacity:.75;
 }
 
 .progress{
-  margin-top:10px;
-  height:14px;
-  background:#f3a6bb;
+  height:16px;
+  background:var(--barra);
   border-radius:20px;
   overflow:hidden;
 }
@@ -78,16 +89,17 @@ h2{
 .fill{
   height:100%;
   width:0%;
-  background:#fff;
+  background:white;
   transition:.4s;
 }
 
 .reward{
   text-align:center;
   padding:14px;
-  border-radius:18px;
-  border:2px dashed #f3a6bb;
-  opacity:.3;
+  border-radius:20px;
+  border:2px dashed var(--barra);
+  opacity:.35;
+  transition:.4s;
 }
 
 .reward.unlocked{
@@ -96,20 +108,23 @@ h2{
 
 .bunny{
   position:fixed;
-  bottom:18px;
-  right:18px;
+  bottom:16px;
+  right:16px;
   font-size:64px;
   transition:.3s;
 }
 
 .bunny.happy{
-  transform:scale(1.15) rotate(-3deg);
+  transform:scale(1.2) rotate(-5deg);
 }
 
-button{
-  border:none;
+#reset{
+  position:fixed;
+  top:10px;
+  right:10px;
   background:none;
-  font-size:1.1em;
+  border:none;
+  font-size:1.4em;
   cursor:pointer;
 }
 
@@ -120,76 +135,70 @@ button{
 </head>
 
 <body>
+
+<button id="reset" title="Reiniciar día">💔</button>
+<div class="bunny" id="bunny">🐰</div>
+
 <div class="app">
+<header>🌸 Mi Jueguito de Hábitos 🌸</header>
 
-<header>🌸 Mi Jueguito de Hábitos 🐰</header>
-
-<div class="card" id="habitList"></div>
+<div class="card" id="tasks"></div>
 
 <div class="card">
+<h2>📊 Progreso diario</h2>
 <div class="progress"><div class="fill"></div></div>
 </div>
 
 <div class="card reward" id="reward">
-🎀 Recompensa Doramas<br>
-<small>Se desbloquea con 80%</small>
+🎀 Recompensa desbloqueada<br>
+<small>Puedes ver doramas sin culpa 💖</small>
 </div>
 
 <div class="card history">
 <h2>📅 Historial</h2>
 <ul id="history"></ul>
 </div>
-
-<button id="reset">💔 Reiniciar día</button>
-
 </div>
 
-<div class="bunny" id="bunny">🐰</div>
-
 <script>
-// ====== DATOS ======
-const HABITOS = [
-  {
-    id:"agua1",
-    nombre:"Tomar agua (1/4)",
-    desc:"Un vaso grande apenas empezar la mañana.",
-    diario:true
-  },
-  {
-    id:"agua2",
-    nombre:"Tomar agua (2/4)",
-    desc:"Segundo vaso grande antes de almorzar.",
-    diario:true
-  },
-  {
-    id:"agua3",
-    nombre:"Tomar agua (3/4)",
-    desc:"Otro vaso por la tarde.",
-    diario:true
-  },
-  {
-    id:"agua4",
-    nombre:"Tomar agua (4/4)",
-    desc:"Último vaso para completar 2L.",
-    diario:true
-  },
-  {
-    id:"rutina_manana",
-    nombre:"Rutina matutina y orden",
-    desc:"Levantarte, hacer la cama, ordenar, asearte, vestirte y peinarte.",
-    diario:true
-  },
-  {
-    id:"dientes_manana",
-    nombre:"Cepillado + lengua (mañana)",
-    desc:"Cepillar dientes y lengua al despertar.",
-    diario:true
-  }
+// =====================
+// TAREAS COMPLETAS
+// =====================
+const TAREAS = [
+  // MAÑANA
+  ["agua1","💧 Agua 1/4","Un vaso grande apenas despiertas"],
+  ["rutina","🛏️ Rutina matutina","Hacer la cama, ordenar, asearte, vestirte y peinarte"],
+  ["dientes_m","🦷 Cepillado mañana","Dientes + lengua"],
+  ["desayuno","🍞 Desayuno","Comer tranquila antes de salir"],
+  ["agua2","💧 Agua 2/4","Segundo vaso antes del almuerzo"],
+
+  // ESTUDIO
+  ["clases","📚 Asistir a clases","Poner atención y tomar apuntes"],
+  ["repaso","📝 Repaso diario","Revisar o resumir lo visto en clases"],
+
+  // EJERCICIO (L–V)
+  ["ejercicio","🏋️ Ejercicio","Rutina según el día (no sáb/dom)"],
+  ["estiramiento","🧘 Estiramiento","5–10 min post ejercicio"],
+
+  // TARDE
+  ["agua3","💧 Agua 3/4","Vaso por la tarde"],
+  ["ducha","🚿 Ducha","Al llegar a casa"],
+  ["once","☕ Once","Comer algo rico y relajarte"],
+
+  // NOCHE
+  ["dientes_n","🦷 Cepillado noche","Dientes + lengua antes de dormir"],
+  ["piel","🧴 Rutina facial","Limpieza + crema"],
+  ["agua4","💧 Agua 4/4","Último vaso del día"],
+  ["mochila","🎒 Mochila lista","Dejar todo preparado"],
+  ["ropa","👕 Ropa lista","Elegir outfit del día siguiente"],
+  ["dormir","🌙 Dormir","Irte a la cama a buena hora"]
 ];
 
-// ====== ESTADO ======
+// =====================
+// ESTADO
+// =====================
 const today = new Date().toLocaleDateString();
-const list = document.getElementById("habitList");
+const tasksDiv = document.getElementById("tasks");
 const fill = document.querySelector(".fill");
 const bunny = document.getElementById("bunny");
 const reward = document.getElementById("reward");
@@ -199,8 +208,7 @@ function loadState(){
     saveHistory();
     localStorage.removeItem("state");
   }
-  const state = JSON.parse(localStorage.getItem("state")||"{}");
-  return state;
+  return JSON.parse(localStorage.getItem("state")||"{}");
 }
 
 function saveState(state){
@@ -208,17 +216,19 @@ function saveState(state){
   localStorage.setItem("date", today);
 }
 
-// ====== RENDER ======
+// =====================
+// RENDER
+// =====================
 function render(){
   const state = loadState();
-  list.innerHTML = "<h2>☀️ Hábitos diarios</h2>";
+  tasksDiv.innerHTML = "<h2>☀️ Tareas del día</h2>";
 
-  HABITOS.forEach(h=>{
-    const checked = state[h.id] || false;
-    list.innerHTML += `
+  TAREAS.forEach(t=>{
+    const checked = state[t[0]]||false;
+    tasksDiv.innerHTML += `
       <label class="task">
-        <input type="checkbox" ${checked?"checked":""} data-id="${h.id}">
-        <span>${h.nombre}<small>${h.desc}</small></span>
+        <input type="checkbox" ${checked?"checked":""} data-id="${t[0]}">
+        <span>${t[1]}<small>${t[2]}</small></span>
       </label>
     `;
   });
@@ -226,25 +236,26 @@ function render(){
   update();
 }
 
-// ====== PROGRESO ======
+// =====================
+// PROGRESO
+// =====================
 function update(){
   const checks = document.querySelectorAll("input[type=checkbox]");
   const done = [...checks].filter(c=>c.checked).length;
   const percent = Math.round(done/checks.length*100);
   fill.style.width = percent+"%";
-
-  if(percent>=80) reward.classList.add("unlocked");
-  else reward.classList.remove("unlocked");
+  reward.classList.toggle("unlocked", percent>=80);
 }
 
-// ====== HISTORIAL ======
+// =====================
+// HISTORIAL
+// =====================
 function saveHistory(){
   const prev = JSON.parse(localStorage.getItem("history")||"[]");
   const state = JSON.parse(localStorage.getItem("state")||"{}");
-  const total = HABITOS.length;
   const done = Object.values(state).filter(v=>v).length;
   if(done>0){
-    prev.push({date:localStorage.getItem("date"),percent:Math.round(done/total*100)});
+    prev.push({date:localStorage.getItem("date"),percent:Math.round(done/TAREAS.length*100)});
     localStorage.setItem("history",JSON.stringify(prev));
   }
 }
@@ -255,9 +266,11 @@ function loadHistory(){
     h.map(d=>`<li>${d.date} — ${d.percent}%</li>`).join("");
 }
 
-// ====== EVENTOS ======
+// =====================
+// EVENTOS
+// =====================
 document.addEventListener("change",e=>{
-  if(e.target.matches("input[type=checkbox]")){
+  if(e.target.matches("input")){
     const state = loadState();
     state[e.target.dataset.id] = e.target.checked;
     saveState(state);
@@ -268,14 +281,14 @@ document.addEventListener("change",e=>{
 });
 
 document.getElementById("reset").onclick=()=>{
-  if(confirm("¿Reiniciar solo el día de hoy?")){
+  if(confirm("¿Reiniciar el progreso de hoy?")){
     saveHistory();
     localStorage.removeItem("state");
     render();
   }
 };
 
-// ====== INIT ======
+// INIT
 render();
 loadHistory();
 </script>
