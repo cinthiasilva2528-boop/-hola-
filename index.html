@@ -1,152 +1,129 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Mi Jueguito de Hábitos</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --pink-bg:#FADADD;
-  --pink-card:#FFEFF4;
-  --pink-strong:#F7A8C6;
-  --pink-soft:#FCE4EC;
-  --text:#6B4C57;
+  --rosa:#f8c8d8;
+  --rosa-claro:#fde8ef;
+  --rosa-card:#fff3f7;
+  --texto:#6b4b57;
 }
 
 body{
   margin:0;
-  background:var(--pink-bg);
-  font-family:'Quicksand',sans-serif;
-  color:var(--text);
+  font-family: 'Quicksand', system-ui, sans-serif;
+  background:var(--rosa);
+  color:var(--texto);
 }
 
 .app{
   max-width:420px;
   margin:auto;
-  padding:12px;
+  padding:16px;
 }
 
 header{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  position:relative;
-  font-size:1.3rem;
+  text-align:center;
+  font-size:1.5em;
   font-weight:700;
   margin-bottom:12px;
 }
 
-.reset{
-  position:absolute;
-  right:0;
-  font-size:1.2rem;
-  cursor:pointer;
+.card{
+  background:var(--rosa-card);
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 6px 12px rgba(0,0,0,.05);
 }
 
-.card{
-  background:var(--pink-card);
-  border-radius:22px;
-  padding:14px;
-  margin-bottom:14px;
-  box-shadow:0 6px 14px rgba(0,0,0,.08);
+h2{
+  margin:0 0 12px;
+  font-size:1.1em;
 }
 
 .task{
-  margin:8px 0;
-}
-
-.task-header{
   display:flex;
+  align-items:center;
   justify-content:space-between;
-  align-items:center;
+  padding:6px 0;
 }
 
-.task-left{
-  display:flex;
-  gap:10px;
-  align-items:center;
+.task label{
+  flex:1;
+  cursor:pointer;
 }
 
 .task input{
+  display:none;
+}
+
+.check{
   width:22px;
   height:22px;
+  border-radius:50%;
+  border:2px solid var(--rosa);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-.heart{
-  font-size:18px;
-  opacity:.4;
-  transition:.3s;
-}
-
-.task input:checked ~ .heart{
-  opacity:1;
-  animation:pulse .4s;
-}
-
-.desc{
-  font-size:.8rem;
-  margin-left:32px;
-  max-height:0;
-  overflow:hidden;
-  transition:.3s;
-}
-
-.task.open .desc{
-  max-height:60px;
+input:checked + .check{
+  background:#ff9fc3;
 }
 
 .progress{
-  background:var(--pink-soft);
-  border-radius:30px;
-  height:30px;
-  display:flex;
-  align-items:center;
-  padding:4px;
+  margin-top:10px;
+  height:16px;
+  background:#f5b6cb;
+  border-radius:20px;
   overflow:hidden;
 }
 
-.bar{
+.fill{
   height:100%;
   width:0%;
-  background:linear-gradient(90deg,#f7a8c6,#fbcfe3);
-  border-radius:30px;
+  background:#fff;
   transition:.4s;
 }
 
 .bunny{
-  font-size:42px;
-  text-align:center;
-  margin-top:8px;
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  font-size:60px;
   transition:.3s;
 }
 
+.bunny.happy{
+  transform:scale(1.1);
+}
+
 .reward{
-  border:2px dashed var(--pink-strong);
+  opacity:.3;
   text-align:center;
-  padding:14px;
-  border-radius:18px;
-  opacity:.5;
+  padding:12px;
+  border:2px dashed #f3a4bd;
+  border-radius:16px;
 }
 
 .reward.unlocked{
   opacity:1;
-  background:white;
-  animation:glow 1.5s infinite;
 }
 
-@keyframes glow{
-  0%{box-shadow:0 0 0}
-  50%{box-shadow:0 0 12px #f7a8c6}
-  100%{box-shadow:0 0 0}
+button{
+  background:none;
+  border:none;
+  font-size:1.2em;
+  cursor:pointer;
 }
 
-@keyframes pulse{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.2)}
-  100%{transform:scale(1)}
+.history{
+  font-size:.9em;
 }
 </style>
 </head>
@@ -154,146 +131,165 @@ header{
 <body>
 <div class="app">
 
-<header>
-🌸 Mi Jueguito de Hábitos 💖
-<span class="reset" id="reset">💔</span>
-</header>
+<header>🌸 Mi Jueguito de Hábitos 💗</header>
 
 <div class="card">
 <h2>☀️ Rutina Diaria</h2>
 
 <div class="task">
-  <div class="task-header">
-    <div class="task-left">
-      <input type="checkbox" class="check">
-      <span>Limpieza Ligera del Hogar</span>
-    </div>
-    <span class="heart">💗</span>
-  </div>
-  <div class="desc">Mantiene tu espacio en orden sin agotarte.</div>
+<label>Rutina Matutina + Postura</label>
+<input type="checkbox" data-task>
+<span class="check"></span>
 </div>
 
 <div class="task">
-  <div class="task-header">
-    <div class="task-left">
-      <input type="checkbox" class="check">
-      <span>Aprender 10 Términos Médicos</span>
-    </div>
-    <span class="heart">💗</span>
-  </div>
-  <div class="desc">Refuerza tu vocabulario base de Enfermería.</div>
+<label>Limpieza Ligera del Hogar</label>
+<input type="checkbox" data-task>
+<span class="check"></span>
 </div>
 
 <div class="task">
-  <div class="task-header">
-    <div class="task-left">
-      <input type="checkbox" class="check">
-      <span>Aprender 10 Palabras en Inglés</span>
-    </div>
-    <span class="heart">💗</span>
-  </div>
-  <div class="desc">Mejora comprensión y memoria a largo plazo.</div>
+<label>Aprender 10 Términos Médicos</label>
+<input type="checkbox" data-task>
+<span class="check"></span>
 </div>
 
 <div class="task">
-  <div class="task-header">
-    <div class="task-left">
-      <input type="checkbox" class="check">
-      <span>Leer Guías de Conducción</span>
-    </div>
-    <span class="heart">💗</span>
-  </div>
-  <div class="desc">Avanzas de a poco sin saturarte.</div>
+<label>Aprender 10 Palabras en Inglés</label>
+<input type="checkbox" data-task>
+<span class="check"></span>
 </div>
 
+<div class="task">
+<label>Leer Guías de Conducción</label>
+<input type="checkbox" data-task>
+<span class="check"></span>
+</div>
+
+<div class="progress"><div class="fill"></div></div>
 </div>
 
 <div class="card">
 <h2>🌙 Rutina Nocturna</h2>
 
-<div class="progress"><div class="bar" id="bar"></div></div>
-<div class="bunny" id="bunny">😴</div>
-
 <div class="task">
-  <div class="task-header">
-    <div class="task-left">
-      <input type="checkbox" class="check">
-      <span>Lavar y Despejar Cocina</span>
-    </div>
-    <span class="heart">💗</span>
-  </div>
-  <div class="desc">Cierras el día con orden y calma.</div>
+<label>Once Familiar</label>
+<input type="checkbox" data-task>
+<span class="check"></span>
 </div>
 
 <div class="task">
-  <div class="task-header">
-    <div class="task-left">
-      <input type="checkbox" class="check">
-      <span>Repaso Fisio / Química</span>
-    </div>
-    <span class="heart">💗</span>
-  </div>
-  <div class="desc">Consolidas lo aprendido sin presión.</div>
+<label>Lavar y Despejar Cocina</label>
+<input type="checkbox" data-task>
+<span class="check"></span>
 </div>
 
 <div class="task">
-  <div class="task-header">
-    <div class="task-left">
-      <input type="checkbox" class="check">
-      <span>Cepillado Nocturno</span>
-    </div>
-    <span class="heart">💗</span>
-  </div>
-  <div class="desc">Autocuidado antes de dormir.</div>
+<label>Repaso Fisio / Química</label>
+<input type="checkbox" data-task>
+<span class="check"></span>
 </div>
 
+<div class="task">
+<label>Cepillado Nocturno</label>
+<input type="checkbox" data-task>
+<span class="check"></span>
+</div>
+
+<div class="progress"><div class="fill"></div></div>
 </div>
 
 <div class="card reward" id="reward">
-🔒 💕 Recompensa de Doramas  
-<br>Se desbloquea al 80%
+💖 Recompensa de Doramas<br>
+<small>Se desbloquea al 80%</small>
 </div>
 
+<div class="card history">
+<h2>📅 Historial</h2>
+<ul id="historyList"></ul>
 </div>
+
+<button id="reset">💔 Reiniciar día</button>
+
+</div>
+
+<div class="bunny" id="bunny">🐰</div>
 
 <script>
-const checks=document.querySelectorAll('.check');
-const bar=document.getElementById('bar');
-const bunny=document.getElementById('bunny');
-const reward=document.getElementById('reward');
+const tasks = document.querySelectorAll('[data-task]');
+const fills = document.querySelectorAll('.fill');
+const bunny = document.getElementById('bunny');
+const reward = document.getElementById('reward');
+const historyList = document.getElementById('historyList');
+
+const today = new Date().toLocaleDateString();
+
+function save(){
+  const state=[...tasks].map(t=>t.checked);
+  localStorage.setItem('state',JSON.stringify(state));
+  localStorage.setItem('date',today);
+}
+
+function load(){
+  if(localStorage.getItem('date')!==today){
+    recordDay();
+    localStorage.removeItem('state');
+  }
+  const state=JSON.parse(localStorage.getItem('state')||'[]');
+  tasks.forEach((t,i)=>t.checked=state[i]||false);
+  update();
+}
 
 function update(){
-  const done=[...checks].filter(c=>c.checked).length;
-  const total=checks.length;
+  const done=[...tasks].filter(t=>t.checked).length;
+  const total=tasks.length;
   const percent=Math.round(done/total*100);
 
-  bar.style.width=percent+'%';
+  fills.forEach(f=>f.style.width=percent+'%');
 
-  bunny.textContent=
-    percent<40?'😴':
-    percent<80?'🙂':'🥰';
+  if(percent>=80) reward.classList.add('unlocked');
+  else reward.classList.remove('unlocked');
+}
 
-  if(percent>=80){
-    reward.classList.add('unlocked');
-    reward.innerHTML='🎉💖 DORAMAS DESBLOQUEADOS 💖🎉';
+function recordDay(){
+  const prev=JSON.parse(localStorage.getItem('history')||'[]');
+  const checked=[...tasks].filter(t=>t.checked).length;
+  if(checked>0){
+    prev.push({date:localStorage.getItem('date'),percent:Math.round(checked/tasks.length*100)});
+    localStorage.setItem('history',JSON.stringify(prev));
   }
 }
 
-checks.forEach(c=>{
-  c.onchange=update;
-  c.parentElement.parentElement.onclick=()=>{
-    c.parentElement.parentElement.classList.toggle('open');
-  }
+tasks.forEach(t=>{
+  t.addEventListener('change',()=>{
+    bunny.classList.add('happy');
+    setTimeout(()=>bunny.classList.remove('happy'),400);
+    save();update();
+  });
 });
 
 document.getElementById('reset').onclick=()=>{
-  if(confirm('¿Reiniciar progreso del día?')){
-    checks.forEach(c=>c.checked=false);
+  if(confirm('¿Reiniciar el progreso de hoy?')){
+    recordDay();
+    localStorage.removeItem('state');
     update();
+    tasks.forEach(t=>t.checked=false);
   }
 };
 
-update();
+function loadHistory(){
+  const h=JSON.parse(localStorage.getItem('history')||'[]');
+  historyList.innerHTML='';
+  h.forEach(d=>{
+    const li=document.createElement('li');
+    li.textContent=`${d.date} — ${d.percent}%`;
+    historyList.appendChild(li);
+  });
+}
+
+load();
+loadHistory();
 </script>
+
 </body>
 </html>
